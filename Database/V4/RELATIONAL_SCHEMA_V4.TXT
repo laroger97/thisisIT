@@ -1,0 +1,99 @@
+----------------------------------------------------------
+Relational Schema for ERDV4
+
+
+SUBJECT(class_code, course_number, descriptive_title)
+
+STUDENT(stud_id , first_name , last_name , course , year, class_code, course_number)
+	FK class_code References SUBJECT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+	      course_number References SUBJECT Nulls Not Allowed
+		Delete Restrict, Update Cascade
+
+EXPERIMENT(exp_id, exp_no , exp_name , subj_name)
+	FK subj_name References SUBJECT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+
+APPARATUS(app_id , app_name)
+
+EXP_ APP(exp_no , exp_name, app_name)
+	FK exp_no References EXPERIMENT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+                   exp_name References EXPERIMENT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+      app_name References APPARATUS Nulls Not Allowed.
+Delete Restrict, Update Cascade
+
+BORROW(borrow_id , borrow_date , borrow_time , app_name , borrow_quantity , stud_id)
+	FK stud_id References STUDENT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+	      app_name References APPARATUS Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+
+RETURN( return_id , return_date , return_time ,return_quantity ,return_remarks ,stud_id)
+	FK stud_id References STUDENT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+       app_name References APPARATUS Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+
+
+Compensate(comp_id ,comp_date ,comp_remarks , return_remarks, app_name ,stud_id )
+	FK stud_id References STUDENT Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+       app_name References APPARATUS Nulls Not Allowed,
+		Delete Restrict, Update Cascade
+	       Return_remarks Nulls Not Allowed,
+		Delete Restrict, Update Cascade.
+
+
+
+
+
+
+
+
+
+
+
+----------------------------------------------------------
+SAMPLE #1
+------------
+CUSTOMERS(custid, custname, address, telno, balance)
+
+PRODUCTS(prodid, description, price)
+	AK  description
+
+SALES (invid, invdate, amount, balance, custid)
+	FK  custid References CUSTOMERS Nulls Not Allowed
+
+SALESDETAILS(invid, prodid, qtysold, unitprice)
+	FK  invid References SALES Nulls Not Allowed
+	prodid References  PRODUCTS Nulls Not Allowed
+----------------------------------------------------------
+
+SAMPLE #2
+------------
+CUSTOMERS(custid, custname, address, telno, balance) 
+
+PRODUCTS(prodid, description, price) 
+
+SALES (invid, invdate, amount, balance custid)
+	FK  custid References CUSTOMERS Nulls Not Allowed,
+			Delete Restrict, Update Cascade
+		
+SALESDETAILS(invid, prodid, qtysold, unitprice) 
+	FK  invid References SALES Nulls Not Allowed,
+			Delete Cascade, Update Restrict
+		prodid References PRODUCTS Nulls Not Allowed
+			Delete Restrict, Update Restrict
+		
+PAYMENTS(orno, paydate, amount, custid)
+	FK  custid References CUSTOMERS Nulls Not Allowed, 
+			Delete Restrict, Update Cascade
+		
+PAYMENTDETAILS(orno, invid, amtapplied)
+	FK  orno References PAYMENTS Nulls Not Allowed, 
+			Delete Cascade, Update Restrict
+		invid References SALES Nulls Not Allowed,
+			Delete Restrict, Update Restrict
+----------------------------------------------------------
